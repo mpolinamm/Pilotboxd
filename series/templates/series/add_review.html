@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Review {{ series.title }} — Pilotboxd{% endblock %}
+
+{% block content %}
+  <a href="{% url 'series_detail' series.pk %}" class="back-link">← {{ series.title }}</a>
+
+  <div class="section-label">write a review</div>
+  <h1>{{ series.title }}</h1>
+
+  <div style="max-width: 560px; margin-top: 32px;">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div style="color: var(--burgundy-light); font-size: 12px; margin-top: 4px;">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn">Save review</button>
+    </form>
+  </div>
+{% endblock %}

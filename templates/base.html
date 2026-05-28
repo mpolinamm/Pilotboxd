@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Pilotboxd{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1a0f;
+      --surface: #162016;
+      --card: #1c2b1a;
+      --border: #2e4a2a;
+      --green: #4a7c59;
+      --matcha: #8aaf72;
+      --sage: #b5c9a1;
+      --cream: #e8e0d0;
+      --brown: #9c7248;
+      --brown-light: #c49a6a;
+      --burgundy: #7a2535;
+      --burgundy-light: #b03a52;
+      --burgundy-pale: #e8a0b0;
+      --text: #d8d4c8;
+      --muted: #7a8a72;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--matcha);
+      font-size: 22px;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--sage); }
+    .nav-links a.active { color: var(--sage); }
+    .nav-links a.user { color: var(--burgundy-light); }
+
+    /* MAIN CONTENT */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* TYPOGRAPHY */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--cream);
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--cream);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .section-label {
+      color: var(--brown);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--matcha);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* SERIES GRID */
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .series-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s;
+    }
+
+    .series-card:hover { border-color: var(--green); }
+
+    .series-poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .series-poster-placeholder {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .series-card-info {
+      padding: 10px 12px;
+    }
+
+    .series-card-title {
+      color: var(--cream);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .series-card-meta {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* STARS */
+    .stars {
+      color: var(--matcha);
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    /* REVIEWS */
+    .review-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .review-card.featured {
+      border-left: 3px solid var(--burgundy);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--burgundy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--burgundy-pale);
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .reviewer { color: var(--cream); font-size: 13px; }
+    .review-season { color: var(--muted); font-size: 11px; margin-left: auto; }
+    .review-text { color: var(--text); font-size: 14px; line-height: 1.7; font-style: italic; margin-top: 8px; }
+
+    /* FILTER PILLS */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label { color: var(--muted); font-size: 12px; }
+
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      padding: 5px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .pill:hover { border-color: var(--green); color: var(--sage); }
+    .pill.active { background: var(--burgundy); border-color: var(--burgundy); color: var(--burgundy-pale); }
+
+    /* FORMS */
+    .form-group { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      color: var(--brown);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--cream);
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--green);
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* BUTTONS */
+    .btn {
+      background: var(--green);
+      color: var(--cream);
+      border: none;
+      border-radius: 6px;
+      padding: 10px 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .btn:hover { background: var(--matcha); color: var(--bg); }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover { border-color: var(--green); color: var(--sage); }
+
+    /* SEARCH BAR */
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .search-bar input {
+      flex: 1;
+    }
+
+    /* DIARY */
+    .diary-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .diary-date { color: var(--muted); font-size: 11px; min-width: 60px; }
+    .diary-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brown-light); flex-shrink: 0; }
+    .diary-title { color: var(--cream); font-size: 14px; flex: 1; text-decoration: none; }
+    .diary-title:hover { color: var(--sage); }
+    .diary-season { color: var(--matcha); font-size: 12px; }
+
+    /* DIVIDER */
+    hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+    /* BACK LINK */
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--sage); }
+
+    /* MESSAGES */
+    .messages { list-style: none; margin-bottom: 20px; }
+    .messages li {
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--sage);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="{% url 'series_list' %}" class="nav-logo">PILOTBOXD</a>
+    <div class="nav-links">
+      <a href="{% url 'series_list' %}">Series</a>
+      <a href="{% url 'search' %}">Search</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'diary' %}">Diary</a>
+        <span style="color: var(--burgundy-light); font-size: 13px; letter-spacing: 1px; text-transform: uppercase;">{{ user.username }}</span>
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

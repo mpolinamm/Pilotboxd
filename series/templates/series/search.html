@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Search — Pilotboxd{% endblock %}
+
+{% block content %}
+  <div class="section-label">find a show</div>
+  <h1>Search</h1>
+
+  <div class="search-bar">
+    <form method="get" style="display: flex; gap: 10px; width: 100%;">
+      <input type="text" name="q" value="{{ query }}" placeholder="Search for a TV series...">
+      <button type="submit" class="btn">Search</button>
+    </form>
+  </div>
+
+  {% for show in results %}
+    <div class="review-card" style="display: flex; gap: 16px; align-items: flex-start;">
+      {% if show.poster_path %}
+        <img src="https://image.tmdb.org/t/p/w92{{ show.poster_path }}"
+             alt="{{ show.name }}"
+             style="width: 60px; border-radius: 4px; flex-shrink: 0;">
+      {% else %}
+        <div style="width: 60px; height: 90px; background: var(--surface); border-radius: 4px; flex-shrink: 0;"></div>
+      {% endif %}
+      <div>
+        <div style="color: var(--cream); font-size: 16px; margin-bottom: 4px;">{{ show.name }}</div>
+        <div style="color: var(--muted); font-size: 12px; margin-bottom: 8px;">{{ show.first_air_date|slice:":4" }}</div>
+        <p style="color: var(--text); font-size: 13px; line-height: 1.6; margin-bottom: 12px;">{{ show.overview|truncatewords:30 }}</p>
+        {% if show.id %}
+          <a href="{% url 'add_from_tmdb' show.id %}" class="btn">+ Add to Pilotboxd</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    {% if query %}
+      <p style="color: var(--muted);">No results found for "{{ query }}".</p>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

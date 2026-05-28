@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Pilotboxd — All Series{% endblock %}
+
+{% block content %}
+  <div class="section-label">discover</div>
+  <h1>All Series</h1>
+
+  <div class="series-grid">
+    {% for s in series %}
+      <a href="{% url 'series_detail' s.pk %}" class="series-card">
+        {% if s.poster_path %}
+          <img src="https://image.tmdb.org/t/p/w300{{ s.poster_path }}"
+               alt="{{ s.title }}" class="series-poster">
+        {% else %}
+          <div class="series-poster-placeholder">{{ s.title }}</div>
+        {% endif %}
+        <div class="series-card-info">
+          <div class="series-card-title">{{ s.title }}</div>
+          <div class="series-card-meta">{{ s.total_seasons }} seasons</div>
+        </div>
+      </a>
+    {% empty %}
+      <p style="color: var(--muted);">No series yet. <a href="{% url 'search' %}" style="color: var(--matcha);">Search and add one!</a></p>
+    {% endfor %}
+  </div>
+{% endblock %}

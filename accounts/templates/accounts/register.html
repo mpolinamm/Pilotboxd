@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Register — Pilotboxd{% endblock %}
+
+{% block content %}
+  <div style="max-width: 440px; margin: 40px auto;">
+    <div class="section-label">create account</div>
+    <h1>Join Pilotboxd</h1>
+    <div style="margin-top: 32px;">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div style="color: var(--muted); font-size: 11px; margin-top: 4px;">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+              <div style="color: var(--burgundy-light); font-size: 12px; margin-top: 4px;">{{ field.errors }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn">Register</button>
+      </form>
+      <p style="color: var(--muted); font-size: 13px; margin-top: 20px;">
+        Already have an account? <a href="{% url 'login' %}" style="color: var(--matcha);">Login</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

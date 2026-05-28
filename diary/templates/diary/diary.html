@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}My Diary — Pilotboxd{% endblock %}
+
+{% block content %}
+  <div class="section-label">your history</div>
+  <h1>My Diary</h1>
+
+  <div style="margin-top: 32px;">
+    {% for entry in entries %}
+      <div class="diary-row">
+        <span class="diary-date">{{ entry.watched_on|date:"d M" }}</span>
+        <div class="diary-dot"></div>
+        <a href="{% url 'series_detail' entry.series.pk %}" class="diary-title">{{ entry.series.title }}</a>
+        <span class="diary-season">Season {{ entry.season }}</span>
+      </div>
+    {% empty %}
+      <p style="color: var(--muted);">No diary entries yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

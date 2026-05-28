@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ series.title }} — Pilotboxd{% endblock %}
+
+{% block content %}
+  <a href="{% url 'series_list' %}" class="back-link">← All Series</a>
+
+  <div style="display: flex; gap: 32px; align-items: flex-start; margin-bottom: 40px;">
+    {% if series.poster_path %}
+      <img src="https://image.tmdb.org/t/p/w300{{ series.poster_path }}"
+           alt="{{ series.title }}"
+           style="width: 180px; border-radius: 8px; flex-shrink: 0;">
+    {% endif %}
+    <div>
+      <div class="section-label">tv series</div>
+      <h1>{{ series.title }}</h1>
+      <div class="subtitle">{{ series.total_seasons }} seasons</div>
+      <p style="color: var(--text); font-size: 14px; line-height: 1.7; max-width: 600px;">{{ series.description }}</p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'add_review' series.pk %}" class="btn" style="margin-top: 20px;">Write a review</a>
+        <a href="{% url 'add_entry' series.pk %}" class="btn btn-secondary" style="margin-top: 20px;">+ Add to diary</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <hr>
+
+  <h2>Reviews</h2>
+
+  <div class="filter-bar">
+    <span class="filter-label">I've watched up to:</span>
+    <a href="?" class="pill {% if not max_season %}active{% endif %}">All</a>
+    {% for s in season_range %}
+      <a href="?max_season={{ s }}" class="pill {% if max_season == s %}active{% endif %}">S{{ s }}</a>
+    {% endfor %}
+  </div>
+
+  {% for review in reviews %}
+    <div class="review-card {% if forloop.first %}featured{% endif %}">
+      <div class="review-top">
+        <div class="avatar">{{ review.user.username|slice:":2"|upper }}</div>
+        <span class="reviewer">{{ review.user.username }}</span>
+        <span class="review-season">Season {{ review.season }}</span>
+      </div>
+      <div class="stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+      <div class="review-text">{{ review.text }}</div>
+      <div style="color: var(--muted); font-size: 11px; margin-top: 10px;">{{ review.created_at|date:"d M Y" }}</div>
+    </div>
+  {% empty %}
+    <p style="color: var(--muted);">No reviews yet. Be the first!</p>
+  {% endfor %}
+{% endblock %}
