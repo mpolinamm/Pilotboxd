@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import Case, When, Value, IntegerField
 from .models import Series, Review
 from diary.models import DiaryEntry
 from .forms import ReviewForm
@@ -8,7 +7,6 @@ from django.conf import settings
 from tmdbv3api import TMDb, TV
 from django import forms
 from django.db.models import Avg
-import re
 
 def series_list(request):
     series = Series.objects.annotate(avg_rating=Avg('reviews__rating'))
@@ -105,7 +103,7 @@ def add_from_tmdb(request, tmdb_id):
     tv = TV()
     show = tv.details(tmdb_id)
 
-    series, created = Series.objects.get_or_create(
+    series, _ = Series.objects.get_or_create(
         tmdb_id=tmdb_id,
         defaults={
             'title': show.name,
