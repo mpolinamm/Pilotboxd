@@ -5,8 +5,14 @@
 {% block content %}
   <a href="{% url 'series_detail' series.pk %}" class="back-link">← {{ series.title }}</a>
 
-  <div class="section-label">log to diary</div>
+  <div class="section-label">{% if existing %}update progress{% else %}log to diary{% endif %}</div>
   <h1>{{ series.title }}</h1>
+
+  {% if existing %}
+    <p style="color: var(--muted); font-size: 13px; margin-top: 8px;">
+      Currently logged: <span style="color: var(--matcha);">Season {{ existing.season }}</span>
+    </p>
+  {% endif %}
 
   <div style="max-width: 460px; margin-top: 32px;">
     <form method="post">
@@ -15,15 +21,19 @@
         <label>Season watched</label>
         <select name="season">
           {% for s in season_range %}
-            <option value="{{ s }}">Season {{ s }}</option>
+            <option value="{{ s }}" {% if existing.season == s %}selected{% endif %}>
+              Season {{ s }}
+            </option>
           {% endfor %}
         </select>
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Notes (optional)</label>
-        <textarea name="notes" placeholder="Any thoughts?"></textarea>
-      </div>
-      <button type="submit" class="btn">Add to diary</button>
+        <textarea name="notes" placeholder="Any thoughts?">{% if existing %}{{ existing.notes }}{% endif %}</textarea>
+      </div> -->
+      <button type="submit" class="btn">
+        {% if existing %}Update progress{% else %}Add to diary{% endif %}
+      </button>
     </form>
   </div>
 {% endblock %}

@@ -12,19 +12,30 @@ def diary(request):
 @login_required
 def add_entry(request, series_pk):
     series = get_object_or_404(Series, pk=series_pk)
+    # Get existing entry if it exists
+    existing = DiaryEntry.objects.filter(user=request.user, series=series).first()
+
     if request.method == 'POST':
         season = request.POST.get('season')
         notes = request.POST.get('notes', '')
-        DiaryEntry.objects.create(
-            user=request.user,
-            series=series,
-            season=season,
-            watched_on=datetime.date.today(),
-            notes=notes,
-        )
+        if existing:
+            existing.season = season
+            existing.notes = notes
+            existing.watched_on = datetime.date.today()
+            existing.save()
+        else:
+            DiaryEntry.objects.create(
+                user=request.user,
+                series=series,
+                season=season,
+                watched_on=datetime.date.today(),
+                notes=notes,
+            )
         return redirect('series_detail', pk=series_pk)
+
     season_range = range(1, series.total_seasons + 1)
     return render(request, 'diary/add_entry.html', {
         'series': series,
         'season_range': season_range,
+        'existing': existing,
     })

@@ -18,6 +18,11 @@
         <div class="series-card-info">
           <div class="series-card-title">{{ s.title }}</div>
           <div class="series-card-meta">{{ s.total_seasons }} seasons</div>
+          {% if s.avg_rating %}
+            <div style="color: var(--matcha); font-size: 11px; margin-top: 4px;">
+              ★ {{ s.avg_rating|floatformat:1 }}
+            </div>
+          {% endif %}
         </div>
       </a>
     {% empty %}

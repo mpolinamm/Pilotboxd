@@ -28,7 +28,6 @@ class Review(models.Model):
     text = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ('user', 'series', 'season')  
+     
     def __str__(self):
         return f"{self.user.username} — {self.series.title} S{self.season} ({self.rating}★)"

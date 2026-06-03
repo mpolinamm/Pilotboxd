@@ -26,7 +26,11 @@
         <div style="color: var(--cream); font-size: 16px; margin-bottom: 4px;">{{ show.name }}</div>
         <div style="color: var(--muted); font-size: 12px; margin-bottom: 8px;">{{ show.first_air_date|slice:":4" }}</div>
         <p style="color: var(--text); font-size: 13px; line-height: 1.6; margin-bottom: 12px;">{{ show.overview|truncatewords:30 }}</p>
-        {% if show.id %}
+        {% if show.in_db %}
+          <a href="{% url 'series_detail' show.series_pk %}" class="btn">View on Pilotboxd</a>
+          <a href="{% url 'add_review' show.series_pk %}" class="btn btn-secondary" style="margin-left: 8px;">Write a review</a>
+          <a href="{% url 'add_entry' show.series_pk %}" class="btn btn-secondary" style="margin-left: 8px;">+ Diary</a>
+        {% else %}
           <a href="{% url 'add_from_tmdb' show.id %}" class="btn">+ Add to Pilotboxd</a>
         {% endif %}
       </div>

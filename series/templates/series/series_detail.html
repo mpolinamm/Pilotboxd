@@ -15,10 +15,23 @@
       <div class="section-label">tv series</div>
       <h1>{{ series.title }}</h1>
       <div class="subtitle">{{ series.total_seasons }} seasons</div>
+      {% if series.avg_rating %}
+        <div style="color: var(--matcha); font-size: 14px; margin-bottom: 16px;">
+          ★ {{ series.avg_rating|floatformat:1 }} average rating
+        </div>
+      {% endif %}
       <p style="color: var(--text); font-size: 14px; line-height: 1.7; max-width: 600px;">{{ series.description }}</p>
       {% if user.is_authenticated %}
-        <a href="{% url 'add_review' series.pk %}" class="btn" style="margin-top: 20px;">Write a review</a>
-        <a href="{% url 'add_entry' series.pk %}" class="btn btn-secondary" style="margin-top: 20px;">+ Add to diary</a>
+        <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+          <a href="{% url 'add_review' series.pk %}" class="btn">Write a review</a>
+          {% if diary_entry %}
+            <a href="{% url 'add_entry' series.pk %}" class="btn btn-secondary">
+              ✓ Watched to S{{ diary_entry.season }} — Update
+            </a>
+          {% else %}
+            <a href="{% url 'add_entry' series.pk %}" class="btn btn-secondary">+ Add to diary</a>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
   </div>
@@ -28,25 +41,34 @@
   <h2>Reviews</h2>
 
   <div class="filter-bar">
-    <span class="filter-label">I've watched up to:</span>
-    <a href="?" class="pill {% if not max_season %}active{% endif %}">All</a>
+    <span class="filter-label">Select season:</span>
     {% for s in season_range %}
       <a href="?max_season={{ s }}" class="pill {% if max_season == s %}active{% endif %}">S{{ s }}</a>
     {% endfor %}
   </div>
 
-  {% for review in reviews %}
-    <div class="review-card {% if forloop.first %}featured{% endif %}">
-      <div class="review-top">
-        <div class="avatar">{{ review.user.username|slice:":2"|upper }}</div>
-        <span class="reviewer">{{ review.user.username }}</span>
-        <span class="review-season">Season {{ review.season }}</span>
+  {% if max_season %}
+    {% for review in reviews %}
+      <div class="review-card {% if forloop.first %}featured{% endif %}">
+        <div class="review-top">
+          <div class="avatar">{{ review.user.username|slice:":2"|upper }}</div>
+          <span class="reviewer">{{ review.user.username }}</span>
+          <span class="review-season">Season {{ review.season }}</span>
+          {% if user == review.user %}
+            <a href="{% url 'edit_review' review.pk %}"
+               style="color: var(--muted); font-size: 11px; text-decoration: none; margin-left: 8px;">
+              edit
+            </a>
+          {% endif %}
+        </div>
+        <div class="stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+        <div class="review-text">{{ review.text }}</div>
+        <div style="color: var(--muted); font-size: 11px; margin-top: 10px;">{{ review.created_at|date:"d M Y" }}</div>
       </div>
-      <div class="stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
-      <div class="review-text">{{ review.text }}</div>
-      <div style="color: var(--muted); font-size: 11px; margin-top: 10px;">{{ review.created_at|date:"d M Y" }}</div>
-    </div>
-  {% empty %}
-    <p style="color: var(--muted);">No reviews yet. Be the first!</p>
-  {% endfor %}
+    {% empty %}
+      <p style="color: var(--muted);">No reviews for seasons 1–{{ max_season }} yet.</p>
+    {% endfor %}
+  {% else %}
+    <p style="color: var(--muted); font-style: italic;">Select a season to see reviews.</p>
+  {% endif %}
 {% endblock %}

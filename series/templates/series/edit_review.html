@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Review — Pilotboxd{% endblock %}
+
+{% block content %}
+  <a href="{% url 'series_detail' review.series.pk %}" class="back-link">← {{ review.series.title }}</a>
+
+  <div class="section-label">edit review</div>
+  <h1>{{ review.series.title }}</h1>
+
+  <div style="max-width: 560px; margin-top: 32px;">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div style="color: var(--burgundy-light); font-size: 12px; margin-top: 4px;">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div style="display: flex; gap: 12px;">
+        <button type="submit" class="btn">Save changes</button>
+        <a href="{% url 'delete_review' review.pk %}" class="btn btn-secondary"
+           onclick="return confirm('Are you sure you want to delete this review?')"
+           style="border-color: var(--burgundy); color: var(--burgundy-light);">
+          Delete review
+        </a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
