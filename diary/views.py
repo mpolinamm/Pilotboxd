@@ -12,7 +12,6 @@ def diary(request):
 @login_required
 def add_entry(request, series_pk):
     series = get_object_or_404(Series, pk=series_pk)
-    # Get existing entry if it exists
     existing = DiaryEntry.objects.filter(user=request.user, series=series).first()
 
     if request.method == 'POST':
